@@ -4,7 +4,7 @@ import sys
 import glob
 
 try:
-    from setuptools import setup, find_packages
+    from setuptools import setup, find_packages, Extension
 except ImportError:    
     print("This module requires setuptools or (deprecated) distutils.")
     print("Please install setuptools with get-pip.py!")
@@ -19,7 +19,8 @@ def long_description():
     except:
         return description
 
-setup(
+
+setup_data = dict(
     name="python-camellia",
     version="0.2",
     description=description,
@@ -51,6 +52,21 @@ setup(
     
     #include_package_data=True,
 )
+
+try:
+    import Cython
+    from Cython.Distutils import build_ext
+except:
+    pass
+else:
+    sourcefiles = ["camellia/loaders/lcython.pyx"]
+    ext_modules = [Extension("camellia.loaders.lcython",
+                             sourcefiles)
+                   ]
+    setup_data["cmdclass"] = {"build_ext":build_ext}
+    setup_data["ext_modules"] = ext_modules
+
+setup(**setup_data)
 
 if "bdist_wheel" in sys.argv or "bdist_egg" in sys.argv or "install" in sys.argv:
     print()
