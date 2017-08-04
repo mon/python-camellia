@@ -46,7 +46,7 @@ def version_string():
 
     base = "camellia-{}-{}-{}"+d.get(plat, '.shared')
 
-    proc = platform.machine() if platform.machine else "unknown"
+    proc = "AMD64" if sys.maxsize > 2**32 else "x86"
     arch = platform.architecture()[1]
 
     return base.format(__version__, plat, proc)
